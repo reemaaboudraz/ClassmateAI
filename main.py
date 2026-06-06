@@ -26,13 +26,10 @@ Type 'quit' anytime to exit.
 
 
 def print_assistant_response(response):
-    """
-    Prints the chatbot response in a clean and readable format.
-    """
 
     print(f"Sentiment: {response.sentiment_label} ({response.sentiment_score:.2f})")
 
-    if response.sentiment_label == "NEGATIVE" and response.sentiment_score > 0.90:
+    if response.escalated:
         print("Recommended escalation: Contact human advisor.")
 
     if response.matched:
@@ -40,6 +37,38 @@ def print_assistant_response(response):
         print(f"Similarity score: {response.similarity_score:.2f}")
 
     print(f"Answer: {response.answer}\n")
+
+
+def print_conversation_summary(history):
+
+    if not history:
+        print("No conversation history to summarize.")
+        return
+
+    print("\n🌸🐱 Conversation Summary 🐱🌸\n")
+
+    for index, response in enumerate(history, start=1):
+        print(f"Exchange {index}:")
+        print(f"  You: {response.user_input}")
+        print(
+            f"  Sentiment: {response.sentiment_label} "
+            f"({response.sentiment_score:.2f})"
+        )
+        if response.matched:
+            print(f"  Matched question: {response.matched_question}")
+            print(f"  Similarity score: {response.similarity_score:.2f}")
+        print(f"  Answer: {response.answer}")
+        if response.escalated:
+            print("  ⚠️  This exchange was flagged for escalation.")
+        print()
+
+    total = len(history)
+    negative = sum(1 for response in history if response.sentiment_label == "NEGATIVE")
+    escalations = sum(1 for response in history if response.escalated)
+
+    print(f"Total exchanges: {total}")
+    print(f"Negative exchanges: {negative} ({(negative / total) * 100:.1f}%)")
+    print(f"Escalations recommended: {escalations}")
 
 
 def main():
@@ -67,6 +96,7 @@ def main():
 
             if user_input.lower() == "quit":
                 print("\n🐱 Goodbye from ClassmateAI! 🌸")
+                print_conversation_summary(assistant.history)
                 break
 
             if not user_input:
@@ -78,6 +108,7 @@ def main():
 
         except KeyboardInterrupt:
             print("\n\nClassmateAI was closed. Goodbye! 🌸")
+            print_conversation_summary(assistant.history)
             break
 
         except Exception as error:

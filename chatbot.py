@@ -18,17 +18,20 @@ from transformers import pipeline
 
 @dataclass
 class AssistantResponse:
+    user_input: str
     sentiment_label: str
     sentiment_score: float
     answer: str
     matched_question: str
     similarity_score: float
     matched: bool
+    escalated: bool
 
 
 class ClassmateAI:
 
     SIMILARITY_THRESHOLD = 0.4
+    ESCALATION_SCORE_THRESHOLD = 0.90
 
     NO_MATCH_MESSAGE = (
         "I couldn't find an answer to that in my knowledge base. "
@@ -39,6 +42,7 @@ class ClassmateAI:
         self.knowledge_base_path = Path(knowledge_base_path)
         self.questions: List[str] = []
         self.answers: List[str] = []
+        self.history: List[AssistantResponse] = []
 
         self._load_knowledge_base()
 
@@ -119,11 +123,23 @@ class ClassmateAI:
         matched = similarity_score >= self.SIMILARITY_THRESHOLD
         answer = str(retrieval["answer"]) if matched else self.NO_MATCH_MESSAGE
 
-        return AssistantResponse(
-            sentiment_label=str(sentiment["label"]),
-            sentiment_score=float(sentiment["score"]),
+        sentiment_label = str(sentiment["label"])
+        sentiment_score = float(sentiment["score"])
+        escalated = (
+            sentiment_label == "NEGATIVE"
+            and sentiment_score >= self.ESCALATION_SCORE_THRESHOLD
+        )
+
+        response = AssistantResponse(
+            user_input=user_text,
+            sentiment_label=sentiment_label,
+            sentiment_score=sentiment_score,
             answer=answer,
             matched_question=str(retrieval["matched_question"]),
             similarity_score=similarity_score,
             matched=matched,
+            escalated=escalated,
         )
+
+        self.history.append(response)
+        return response
