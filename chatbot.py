@@ -1,5 +1,5 @@
 """Reema Aboudraz, 40253549
-Mridul Mridul STUDENT ID
+Mridul Mridul, 40279215
 COMP-472 Summer 2026
 Mini-Project 1 Submission"""
 
@@ -23,9 +23,17 @@ class AssistantResponse:
     answer: str
     matched_question: str
     similarity_score: float
+    matched: bool
 
 
 class ClassmateAI:
+
+    SIMILARITY_THRESHOLD = 0.4
+
+    NO_MATCH_MESSAGE = (
+        "I couldn't find an answer to that in my knowledge base. "
+        "Please rephrase your question, or contact a human advisor for help."
+    )
 
     def __init__(self, knowledge_base_path: str = "knowledge_base.csv") -> None:
         self.knowledge_base_path = Path(knowledge_base_path)
@@ -107,20 +115,15 @@ class ClassmateAI:
         sentiment = self.detect_sentiment(user_text)
         retrieval = self.find_best_answer(user_text)
 
+        similarity_score = float(retrieval["similarity_score"])
+        matched = similarity_score >= self.SIMILARITY_THRESHOLD
+        answer = str(retrieval["answer"]) if matched else self.NO_MATCH_MESSAGE
+
         return AssistantResponse(
             sentiment_label=str(sentiment["label"]),
             sentiment_score=float(sentiment["score"]),
-            answer=str(retrieval["answer"]),
+            answer=answer,
             matched_question=str(retrieval["matched_question"]),
-            similarity_score=float(retrieval["similarity_score"]),
-        )
-
-    @staticmethod
-    def format_response(response: AssistantResponse) -> str:
-        """Format the response for command-line display."""
-        return (
-            f"Sentiment: {response.sentiment_label} ({response.sentiment_score:.2f})\n"
-            f"Matched question: {response.matched_question}\n"
-            f"Similarity score: {response.similarity_score:.2f}\n"
-            f"Answer: {response.answer}"
+            similarity_score=similarity_score,
+            matched=matched,
         )

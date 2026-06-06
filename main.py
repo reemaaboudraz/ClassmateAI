@@ -1,5 +1,5 @@
 """Reema Aboudraz, 40253549
-Mridul Mridul STUDENT ID
+Mridul Mridul, 40279215
 COMP-472 Summer 2026
 Mini-Project 1 Submission"""
 
@@ -35,8 +35,10 @@ def print_assistant_response(response):
     if response.sentiment_label == "NEGATIVE" and response.sentiment_score > 0.90:
         print("Recommended escalation: Contact human advisor.")
 
-    print(f"Matched question: {response.matched_question}")
-    print(f"Similarity score: {response.similarity_score:.2f}")
+    if response.matched:
+        print(f"Matched question: {response.matched_question}")
+        print(f"Similarity score: {response.similarity_score:.2f}")
+
     print(f"Answer: {response.answer}\n")
 
 

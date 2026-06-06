@@ -10,8 +10,7 @@ This version focuses on two required features:
 # ClassmateAI
 
 - Reema Aboudraz (40253549)
-- Mridul Mridul
-
+- Mridul Mridul (40279215)
 
 ## Libraries Used
 
@@ -55,9 +54,16 @@ Welcome to Student Support AI
 Type 'quit' to exit.
 
 You: I cannot access my account and I am frustrated
-Sentiment: NEGATIVE (0.94)
-Matched question: I am angry because I cannot access my account.
-Similarity score: 0.83
+Sentiment: NEGATIVE (0.85)
+Matched question: How do I reset my password?
+Similarity score: 0.57
+Answer: Visit the IT portal and select Forgot Password.
+
+You: This is terrible i cannot access my acccount
+Sentiment: NEGATIVE (0.93)
+Recommended escalation: Contact human advisor.
+Matched question: How do I reset my password?
+Similarity score: 0.42
 Answer: Visit the IT portal and select Forgot Password.
 
 You: Where is the registrar office?
@@ -65,7 +71,10 @@ Sentiment: NEUTRAL (0.88)
 Matched question: Where is the registrar office?
 Similarity score: 1.00
 Answer: The registrar office is located in Building MB, room 2.145.
+
+You: Everything is so nice about this university.
+Sentiment: POSITIVE (0.97)
+Answer: I couldn't find an answer to that in my knowledge base. Please rephrase your question, or contact a human advisor for help.
 ```
 
 ## Notes
-
