@@ -34,14 +34,10 @@ class ClassmateAI:
 
         self._load_knowledge_base()
 
-        # Sentence embeddings model for semantic search.
-        # This model is small, fast, and commonly used for sentence similarity tasks.
         self.embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
-        # Create embeddings once for all stored questions.
         self.question_embeddings = self.embedding_model.encode(self.questions)
 
-        # 3-label sentiment model: negative, neutral, positive.
         self.sentiment_analyzer = pipeline(
             task="sentiment-analysis",
             model="cardiffnlp/twitter-roberta-base-sentiment-latest",
