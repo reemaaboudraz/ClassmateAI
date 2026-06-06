@@ -27,7 +27,7 @@ Type 'quit' anytime to exit.
 
 def print_assistant_response(response):
 
-    print(f"Sentiment: {response.sentiment_label} ({response.sentiment_score:.2f})")
+    print(f"Sentiment: {response.sentiment_label} ({response.sentiment_score:.3f})")
 
     if response.escalated:
         print("Recommended escalation: Contact human advisor.")
@@ -52,7 +52,7 @@ def print_conversation_summary(history):
         print(f"  You: {response.user_input}")
         print(
             f"  Sentiment: {response.sentiment_label} "
-            f"({response.sentiment_score:.2f})"
+            f"({response.sentiment_score:.3f})"
         )
         if response.matched:
             print(f"  Matched question: {response.matched_question}")
